@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Хроники Кислодрыщенска: Идеальный баланс</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+  
+  <style>
+    body { margin: 0; background-color: #030303; color: white; overflow: hidden; font-family: 'PT Serif', serif; }
+    .paper-texture {
+      background-color: #fdfaf2;
+      background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+    }
+  </style>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+    const { motion, AnimatePresence } = window.Motion;
+
+    const PageIcon = ({ name, size = 100, className = "" }) => (
+      <i data-lucide={name} style={{ width: size, height: size }} className={className}></i>
+    );
+
+    const NavIcon = ({ name, size = 24 }) => (
+      <i data-lucide={name} style={{ width: size, height: size }}></i>
+    );
+
+    const App = () => {
+      const [page, setPage] = useState(0);
+      const [scale, setScale] = useState(1);
+
+      useEffect(() => { lucide.createIcons(); }, [page]);
+
+      useEffect(() => {
+        const handleResize = () => {
+          // Выделяем фиксированное место под панель кнопок (120px)
+          const bottomPanelHeight = 120;
+          const availableWidth = window.innerWidth * 0.96;
+          const availableHeight = window.innerHeight - bottomPanelHeight - 40; // 40px - запас
+          
+          const bookWidth = 2400;
+          const bookHeight = 1930; // Идеальная высота, чтобы текст не терялся и не было пустоты
+          
+          const scaleX = availableWidth / bookWidth;
+          const scaleY = availableHeight / bookHeight; 
+          setScale(Math.min(scaleX, scaleY, 1));
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+      }, []);
+
+      const chapters = [
+        {
+          left: {
+            title: "Завет предков",
+            content: `Послушай, милый, как под ветром стонет\nСело, чье имя страшно произнесть.\nТам в Кислодрыщенске луна в болоте тонет,\nИ в каждом вдохе — гибельная весть.\n\nТам три избы, просоленных нуждою,\nСтоят, как старцы, сгорбив косяки.\nИ пахнет там не мятой, а бедою,\nИ плесенью у выцветшей реки.\n\nЗдесь предки наши в землю полегли,\nНе зная неги, славы и покоя.\nЛишь ржавый плуг в объятиях земли\nНапоминает лето золотое.`,
+            section: "ВСТУПЛЕНИЕ", icon: <PageIcon name="anchor" className="text-stone-300 opacity-20" />
+          },
+          right: {
+            title: "Лики Хроник",
+            content: `Ваня, Тимур, Никита да Диманя —\nЧетырнадцать им — вечности порог.\nОни в тумане, как ежи в кафтане,\nИ каждый в поле — малый уголек.\n\nА Света... Свете сорок три, ребята.\nОна — как знамя павшего полка.\nЕе душа — кабацкая палата,\nГде вместо солнца — горечь Балтику.\n\nОни идут сквозь сумерки и рожь,\nГде каждый шаг пропитан горьким дымом.\nИ в их глазах ты правды не найдешь —\nЛишь отблеск дней, что пролетают мимо.`,
+            section: "ПЕРСОНАЖИ", icon: <PageIcon name="users" className="text-stone-300 opacity-20" />
+          }
+        },
+        {
+          left: {
+            title: "Звезда Ивана",
+            content: `У Вани в доме — юбка да платочек,\nОн в бабском платье ходит по росе.\nСнимался в «Бабульке» он, наш ангелочек,\nИ в этом фильме превзошел он всех.\n\nВилы в руках, в косынке — образ нежный,\nАктер великий, в юности безбрежной,\nОн славой «Бабульки» навеки не забыт.\n\nСоседи шепчут: «Эк его скрутило!»,\nА он идет, поправив свой наряд.\nВ нем дремлет артистическая сила,\nХотя в деревне всякое говорят.`,
+            section: "АРТИСТ", icon: <PageIcon name="camera" className="text-stone-300 opacity-20" />
+          },
+          right: {
+            title: "Хата Тимура",
+            content: `А у Тимура — стул средь океана...\nОгромных куч зловонного тряпья.\nТам мусор копится — и поздно, и так рано,\nВ нем тонет жизнь, и радость, и семья.\n\nНи крошки хлеба, ни гвоздя, ни ласки,\nЛишь хлам гнилой до самых потолков.\nКороль отбросов и пустой закваски,\nВладыка ржавых труб и кандалов.\n\nТам старый кед соседствует с кастрюлей,\nИ рваный ватник греет пустоту.\nТимур сидит, как в золотом отгуле,\nХраня свою безумную мечту.`,
+            section: "БЫТ", icon: <PageIcon name="trash-2" className="text-stone-300 opacity-20" />
+          }
+        },
+        {
+          left: {
+            title: "Вечер у Вани",
+            content: `Никита в трениках, с заточкой в голенище,\nСтоит у входа, семечки жуя.\nЗдесь каждый взгляд — как пепел на кладбище,\nЗдесь нет чужих, и истина — своя.\n\nКолонка хрипнет старым шансоном,\nДиманя вейпом застилает свет.\nИ пахнет вечер краденым бетоном,\nКоторому в селе замены нет.\n\nОни стоят, плечом подперев стену,\nСчитая звезды в мутной луже дня.\nИ ждут они великую измену,\nИли хотя бы искру от огня.`,
+            section: "СУМЕРКИ", icon: <PageIcon name="swords" className="text-stone-300 opacity-20" />
+          },
+          right: {
+            title: "Гнев Светланы",
+            content: `Стучит в окно железная десница —\nТо Света вышла плеткой погулять.\nКому сегодня в страхе не спится?\nКого она заставит вновь страдать?\n\n«А ну, ироды, мусор по местам!» —\nКричит она, Балтику допив до края.\nИ эхо катится по выжженным кустам,\nГде бродит Ваня, платьем задевая.\n\nЕе боятся клены и березы,\nЕе боится даже старый пес.\nГде Света — там не смех, а только слезы,\nИ вечный, изнурительный допрос.`,
+            section: "ВЛАСТЬ", icon: <PageIcon name="zap" className="text-stone-300 opacity-20" />
+          }
+        },
+        {
+          left: {
+            title: "Письмо к Люське",
+            content: `Ты жива еще, моя старушка?\nЖив и я. Привет тебе, привет!\nПусть струится над твоей избушкой\nВейпа сизый, электронный свет.\n\nПишут мне, что Света в гневе диком\nПлеткой бьет по ржавым воротам.\nИ Тимур под общим тихим криком\nТащит мусор к старым берегам.\n\nНе грусти же так, моя родная,\nВ этом Кислодрыщенске глухом.\nМы дойдем до призрачного края\nИ забудем всё, что было сном.`,
+            section: "СВЯЗЬ", icon: <PageIcon name="mail" className="text-stone-300 opacity-20" />
+          },
+          right: {
+            title: "Чёрный человек",
+            content: `Друг мой, друг мой,\nЯ очень и очень болен.\nВижу Ваню в платке —\nОн идет по бескрайней меже.\n\nБудто кто-то над полем,\nНад кладбищем волен\nВ бабском платье кружить\nНа крутом вираже.\nЭто маска актера,\nИли вейпа дурман?\n\nЧерный человек садится на кровать,\nИ шепчет он: «Вам здесь не выживать».\nНо мы хохочем, «Балтос» допивая,\nСвои грехи в навозе зарывая.`,
+            section: "ПОЭМА", icon: <PageIcon name="ghost" className="text-stone-300 opacity-20" />
+          }
+        },
+        {
+          left: {
+            title: "Шаганэ",
+            content: `Шаганэ ты моя, Шаганэ!\nПотому что я с Кислодрыщенска,\nГде лопата блестит по-пацански,\nЯ спою о хмельной стороне.\n\nТам Диманя в вейповом огне\nДарит нам ароматы Востока.\nХоть судьба и бывает жестока,\nВейп — единственный друг в тишине.\n\nЯ не видел персидских садов,\nТолько заросли злой лебеды.\nНо я к жизни такой же готов,\nЛишь бы не было в сердце беды.`,
+            section: "ВОСТОК", icon: <PageIcon name="wind" className="text-stone-300 opacity-20" />
+          },
+          right: {
+            title: "Клен ты мой",
+            content: `Клен ты мой опавший,\nМусором припавший.\nЧто стоишь, нагнувшись,\nВ кучах утонувший?\n\nИли что увидел?\nИли что услышал?\nСловно Волк испуганный\nНа прогулку вышел.\nА под кленом Ваня\nВ бабском сарафане.\n\nСтережет он тайну,\nЧто в канаве спит.\nИ листвою ржавой\nТихо шелестит.`,
+            section: "ОСЕНЬ", icon: <PageIcon name="tree-deciduous" className="text-stone-300 opacity-20" />
+          }
+        },
+        {
+          left: {
+            title: "Грусть кабацкая",
+            content: `Сыпь, гармоника! Скука... скука...\nСвета цедит из банки «Балтос».\nДля Тимура любая штука —\nЭто в мусорный рай нанос.\n\nНе жалею, не зову, не плачу,\nВсе пройдет, как с белых яблонь дым.\nЯ вейпнул — и поймал удачу,\nСтал я вечно в селе молодым.\n\nПусть гармонь надрывается горько,\nПусть пропитана водка тоской.\nНам осталась последняя зорька,\nИ навеки желанный покой.`,
+            section: "КАБАК", icon: <PageIcon name="glass-water" className="text-stone-300 opacity-20" />
+          },
+          right: {
+            title: "Прощание",
+            content: `До свиданья, друг мой, до свиданья.\nМилый мой, ты у меня в груди.\nМухосранск — обитель расставанья,\nВейпный дым маячит впередию \nИ конец жизни Димы, ведь у него вейп взорвался!.\n\nСвета, плетку отложи на время,\nДай допить последнюю свою балтику.\nТяжело нести нам это бремя,\nЕсли в сердце — вечный кавардак.\n\nУхожу я в туман без оглядки,\nГде Никита с заточкой молчит.\nЖизнь сыграла со мною в прятки,\nИ земля под ногами горит.`,
+            section: "ЭПИЛОГ", icon: <PageIcon name="moon" className="text-stone-300 opacity-20" />
+          }
+        }
+      ];
+
+      return (
+        <div className="w-screen h-screen flex flex-col bg-[#050505]">
+          
+          {/* Контейнер книги: теперь занимает всё пространство кроме кнопок */}
+          <div className="flex-1 flex items-center justify-center p-4 overflow-hidden">
+            <div 
+              style={{ 
+                width: '2400px', 
+                height: '2200px', 
+                transform: `scale(${scale})`, 
+                transformOrigin: 'center center' 
+              }} 
+              className="relative flex bg-[#1a0101] border-[25px] border-[#0a0000] rounded-[60px] shadow-[0_80px_150px_rgba(0,0,0,0.9)] flex-shrink-0"
+            >
+              <div className="w-full h-full paper-texture relative flex border-2 border-black/10 overflow-hidden">
+                <div className="absolute left-1/2 top-0 bottom-0 w-[160px] -ml-[80px] bg-gradient-to-r from-transparent via-black/30 to-transparent z-30 pointer-events-none"></div>
+                <div className="absolute left-1/2 top-0 bottom-0 w-[3px] bg-black/40 z-30"></div>
+
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={page}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="w-full h-full flex"
+                  >
+                    {/* Левая страница */}
+                    <div className="w-1/2 h-full px-32 py-24 flex flex-col justify-between border-r border-black/5">
+                      <div>
+                        <div className="flex justify-between items-center border-b-[4px] border-stone-300 pb-6 mb-12">
+                          <span className="text-[36px] tracking-[0.4em] uppercase text-stone-400 font-bold italic">{chapters[page].left.section}</span>
+                          <span className="text-[48px] text-stone-300 font-black">{page * 2 + 1}</span>
+                        </div>
+                        <h2 className="text-[100px] font-black text-stone-900 mb-10 leading-none uppercase tracking-tighter border-b-[12px] border-red-900/5 pb-8">
+                          {chapters[page].left.title}
+                        </h2>
+                        <p className="text-[52px] leading-[1.25] text-stone-800 whitespace-pre-wrap font-bold italic">
+                          {chapters[page].left.content}
+                        </p>
+                      </div>
+                      <div className="flex justify-end">{chapters[page].left.icon}</div>
+                    </div>
+
+                    {/* Правая страница */}
+                    <div className="w-1/2 h-full px-32 py-24 flex flex-col justify-between">
+                      <div>
+                        <div className="flex justify-between items-center border-b-[4px] border-stone-300 pb-6 mb-12 flex-row-reverse">
+                          <span className="text-[36px] tracking-[0.4em] uppercase text-stone-400 font-bold italic">{chapters[page].right.section}</span>
+                          <span className="text-[48px] text-stone-300 font-black">{page * 2 + 2}</span>
+                        </div>
+                        <h2 className="text-[100px] font-black text-stone-900 mb-10 leading-none uppercase tracking-tighter border-b-[12px] border-red-900/5 pb-8 text-right">
+                          {chapters[page].right.title}
+                        </h2>
+                        <p className="text-[52px] leading-[1.25] text-stone-800 whitespace-pre-wrap font-bold italic text-right">
+                          {chapters[page].right.content}
+                        </p>
+                      </div>
+                      <div className="flex justify-start">{chapters[page].right.icon}</div>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
+          </div>
+
+          {/* Панель управления: компактная и без лишних пустот */}
+          <div className="h-[100px] flex items-center justify-center gap-8 bg-black/60 backdrop-blur-xl border-t border-white/5">
+            <button 
+              onClick={() => setPage(p => Math.max(0, p - 1))}
+              disabled={page === 0}
+              className="p-3 bg-white/5 rounded-full text-white hover:bg-white/10 active:scale-90 disabled:opacity-0 transition-all border border-white/10"
+            >
+              <NavIcon name="chevron-left" />
+            </button>
+            <div className="text-stone-500 text-[10px] font-bold uppercase tracking-[0.4em]">
+              {page + 1} / {chapters.length}
+            </div>
+            <button 
+              onClick={() => setPage(p => Math.min(chapters.length - 1, p + 1))}
+              disabled={page === chapters.length - 1}
+              className="p-3 bg-white/5 rounded-full text-white hover:bg-white/10 active:scale-90 disabled:opacity-0 transition-all border border-white/10"
+            >
+              <NavIcon name="chevron-right" />
+            </button>
+          </div>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
